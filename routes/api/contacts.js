@@ -5,6 +5,7 @@ const router = express.Router();
 const {
     getAllContacts,
     getOneContact,
+    // getFavoriteContact,
     addContact,
     deletContact,
     updateContact,
@@ -15,6 +16,8 @@ router.get("/", tokenMiddelware, getAllContacts);
 
 router.get("/:contactId", tokenMiddelware, getOneContact);
 
+// router.get("?favorite=true", tokenMiddelware, getFavoriteContact);
+
 router.post("/", tokenMiddelware, addValidation, addContact);
 
 router.delete("/:contactId", tokenMiddelware, deletContact);
@@ -24,3 +27,5 @@ router.put("/:contactId", tokenMiddelware, updateValidation, updateContact);
 router.patch("/:contactId", tokenMiddelware, validationFavorite, updateFavorite);
 
 module.exports = router;
+
+// https://localhost:5000/api/contacts/

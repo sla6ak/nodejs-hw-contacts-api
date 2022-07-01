@@ -16,6 +16,7 @@ const addNewUser = async (req, res, next) => {
         const hashPassword = await bcrypt.hash(password, 12);
         const user = new UserModel({ email: email, password: hashPassword });
         await user.save();
+        console.log(user);
         const token = jwt.sign({ id: user.id }, PASSWORD_KEY, { expiresIn: "30d" }); // в качестве ключа возьму id юзера
         const userToken = await UserModel.findOneAndUpdate({ id: user.id }, { token: token }, { new: true });
         return res.status(200).json({ message: "status 201", response: userToken });
@@ -57,6 +58,23 @@ const getCurentUser = async (req, res, next) => {
     }
 };
 
+const updateSubscription = async (req, res, next) => {
+    try {
+        const { subscription } = req.body;
+        const userSubscription = await UserModel.findByIdAndUpdate(
+            { _id: req.userId },
+            { subscription: subscription },
+            { new: true }
+        );
+        if (!userSubscription) {
+            return res.status(404).json({ message: `User not found`, response: null });
+        }
+        return res.status(200).json({ message: "status 200", response: userSubscription });
+    } catch (error) {
+        return res.status(404).json({ message: `User not found`, response: null, error: error });
+    }
+};
+
 const logOutUser = async (req, res, next) => {
     try {
         const user = await UserModel.findByIdAndUpdate({ _id: req.userId }, { token: "" }, { new: true });
@@ -69,4 +87,4 @@ const logOutUser = async (req, res, next) => {
     }
 };
 
-module.exports = { getCurentUser, userLogin, addNewUser, logOutUser };
+module.exports = { getCurentUser, userLogin, addNewUser, updateSubscription, logOutUser };

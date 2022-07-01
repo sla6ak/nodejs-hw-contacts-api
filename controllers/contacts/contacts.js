@@ -20,6 +20,18 @@ const getOneContact = async (req, res, next) => {
     }
 };
 
+const getFavoriteContact = async (req, res, next) => {
+    try {
+        // console.log(req);
+        const contactsFavorite = await ContactModel.find({ owner: req.userId, favorite: true });
+        return res.status(200).json({ message: "status 200", response: contactsFavorite });
+    } catch (error) {
+        return res
+            .status(404)
+            .json({ message: `Contact ${req.params.contactId} not found`, response: null, error: error });
+    }
+};
+
 const addContact = async (req, res, next) => {
     try {
         const contact = new ContactModel({ ...req.body, owner: req.userId });
@@ -73,4 +85,12 @@ const updateFavorite = async (req, res, next) => {
     }
 };
 
-module.exports = { getAllContacts, getOneContact, addContact, deletContact, updateContact, updateFavorite };
+module.exports = {
+    getAllContacts,
+    getOneContact,
+    getFavoriteContact,
+    addContact,
+    deletContact,
+    updateContact,
+    updateFavorite,
+};
