@@ -1,5 +1,6 @@
 const express = require("express");
-const { addValidation, updateValidation, validationFavorite } = require("../middlewares/middlewaresapi.js");
+const { addValidation, updateValidation, validationFavorite } = require("../middlewares/contactValidation.js");
+const { tokenMiddelware } = require("../middlewares/tokenMiddelware");
 const router = express.Router();
 const {
     getAllContacts,
@@ -10,17 +11,16 @@ const {
     updateFavorite,
 } = require("../../controllers/contacts/contacts");
 
-router.get("/", getAllContacts);
+router.get("/", tokenMiddelware, getAllContacts);
 
-router.get("/:contactId", getOneContact);
+router.get("/:contactId", tokenMiddelware, getOneContact);
 
-// add contact
-router.post("/", addValidation, addContact);
+router.post("/", tokenMiddelware, addValidation, addContact);
 
-router.delete("/:contactId", deletContact);
+router.delete("/:contactId", tokenMiddelware, deletContact);
 
-router.put("/:contactId", updateValidation, updateContact);
+router.put("/:contactId", tokenMiddelware, updateValidation, updateContact);
 
-router.patch("/:contactId", validationFavorite, updateFavorite);
+router.patch("/:contactId", tokenMiddelware, validationFavorite, updateFavorite);
 
 module.exports = router;
