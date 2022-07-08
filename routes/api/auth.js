@@ -2,23 +2,20 @@ const express = require("express");
 const router = express.Router();
 const { loginValidation, signupValidation } = require("../middlewares/userValidation");
 const { tokenMiddelware } = require("../middlewares/tokenMiddelware");
-const {
-    getCurentUser,
-    userLogin,
-    addNewUser,
-    updateSubscription,
-    logOutUser,
-} = require("../../controllers/users/users");
+const { upload } = require("../middlewares/filesUpload");
+const user = require("../../controllers/users/users");
 
-router.post("/signup", signupValidation, addNewUser);
+router.post("/signup", signupValidation, user.addNewUser);
 
-router.post("/login", loginValidation, userLogin);
+router.post("/login", loginValidation, user.userLogin);
 
-router.get("/", tokenMiddelware, getCurentUser);
+router.get("/", tokenMiddelware, user.getCurentUser);
 
-router.patch("/", tokenMiddelware, updateSubscription);
+router.patch("/avatars", tokenMiddelware, upload.single("image"), user.updateAvatar); // single("imege") - важно указать какая часть запроса должна быть обработана миделваром по ключу в котором фронтенд отправляет файлы
 
-router.get("/logout", tokenMiddelware, logOutUser);
+router.patch("/", tokenMiddelware, user.updateSubscription);
+
+router.get("/logout", tokenMiddelware, user.logOutUser);
 
 module.exports = router;
 
