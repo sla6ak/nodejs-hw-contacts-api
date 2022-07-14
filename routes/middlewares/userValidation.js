@@ -25,7 +25,7 @@ const signupValidation = (req, res, next) => {
     });
     const resultValidation = schema.validate(req.body);
     if (resultValidation.error) {
-        return res.status(400).json({ message: "No validate", response: null });
+        return res.status(400).json({ message: "No validate", response: null, error: resultValidation.error });
     }
     next();
 };
