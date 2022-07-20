@@ -30,17 +30,6 @@ class Contacts {
         }
     }
 
-    async getFavoriteContact(req, res, next) {
-        try {
-            const contactsFavorite = await ContactModel.find({ owner: req.userId, favorite: true });
-            return res.status(200).json({ message: "status 200", response: contactsFavorite });
-        } catch (error) {
-            return res
-                .status(404)
-                .json({ message: `Contact ${req.params.contactId} not found`, response: null, error: error });
-        }
-    }
-
     async addContact(req, res, next) {
         try {
             const contact = new ContactModel({ ...req.body, owner: req.userId });
@@ -72,6 +61,17 @@ class Contacts {
                 { new: true }
             );
             return res.status(200).json({ message: "status 200", response: editContact });
+        } catch (error) {
+            return res
+                .status(404)
+                .json({ message: `Contact ${req.params.contactId} not found`, response: null, error: error });
+        }
+    }
+
+    async getFavoriteContact(req, res, next) {
+        try {
+            const contactsFavorite = await ContactModel.find({ owner: req.userId, favorite: true });
+            return res.status(200).json({ message: "status 200", response: contactsFavorite });
         } catch (error) {
             return res
                 .status(404)

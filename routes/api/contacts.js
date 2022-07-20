@@ -3,20 +3,21 @@ const { addValidation, updateValidation, validationFavorite } = require("../midd
 const { tokenMiddelware } = require("../middlewares/tokenMiddelware");
 const router = express.Router();
 const contact = require("../../controllers/contacts/contacts");
+const ctrlWrapper = require("../helper/ctrlWrapper");
 
-router.get("/", tokenMiddelware, contact.getAllContacts);
+router.get("/", tokenMiddelware, ctrlWrapper(contact.getAllContacts));
 
-router.get("/:contactId", tokenMiddelware, contact.getOneContact);
+router.get("/:contactId", tokenMiddelware, ctrlWrapper(contact.getOneContact));
 
-// router.get("/:contactId/favorite", tokenMiddelware, getFavoriteContact);
+router.post("/", tokenMiddelware, addValidation, ctrlWrapper(contact.addContact));
 
-router.post("/", tokenMiddelware, addValidation, contact.addContact);
+router.delete("/:contactId", tokenMiddelware, ctrlWrapper(contact.deletContact));
 
-router.delete("/:contactId", tokenMiddelware, contact.deletContact);
+router.put("/:contactId", tokenMiddelware, updateValidation, ctrlWrapper(contact.updateContact));
 
-router.put("/:contactId", tokenMiddelware, updateValidation, contact.updateContact);
+router.get("/:contactId/favorite", tokenMiddelware, ctrlWrapper(contact.getFavoriteContact));
 
-router.patch("/:contactId/favorite", tokenMiddelware, validationFavorite, contact.updateFavorite);
+router.patch("/:contactId/favorite", tokenMiddelware, validationFavorite, ctrlWrapper(contact.updateFavorite));
 
 module.exports = router;
 
